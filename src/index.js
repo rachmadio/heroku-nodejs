@@ -108,10 +108,10 @@ const handleAirtableCall = async (req) => {
                 if (recordPrice >= minPrice && recordPrice <= maxPrice) {
                     // This is where you format the string
                     if (fields.rating_n_reviews === 'empty') {
-                        outString += `--> ${fields.name}, ${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet, www.${fields.url}.`;
+                        outString += `--> ${fields.name}, ${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet, https://airbnb.com${fields.url}.`;
                         outString += '\n';
                     } else {
-                        outString += `--> ${fields.name}, ${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews} www.${fields.url}.`;
+                        outString += `--> ${fields.name}, ${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews} https://airbnb.com${fields.url}.`;
                         outString += '\n';
                     }
                 }
