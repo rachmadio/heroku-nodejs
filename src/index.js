@@ -13,7 +13,7 @@ webApp.use(express.urlencoded({
 webApp.use(express.json());
 
 // Server Port
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 
 // Home route
 webApp.get('/', (req, res) => {
@@ -24,9 +24,9 @@ const API_KEY = process.env.API_KEY;
 const APP_ID = process.env.APP_ID;
 
 // Get the user by sender_id
-const getLocationInformation = async (location) => {
+const getLocationInformation = async (location, guest) => {
 
-    url = `https://api.airtable.com/v0/${APP_ID}/ListingsAirbnbSheet?view=Grid%20view&filterByFormula=(AND({Location}="${location}"))&maxRecords=100`;
+    url = `https://api.airtable.com/v0/${APP_ID}/ListingsAirbnbSheet?view=Grid%20view&filterByFormula=(AND({Location}="${location}", {guest}="${guest}"))&maxRecords=100`;
     headers = {
         Authorization: 'Bearer ' + API_KEY
     }
@@ -74,10 +74,10 @@ const handleAirtableCall = async (req) => {
 
     let minPrice, maxPrice;
 
-    if (price === '1') {
+    if (Number(price) === 1) {
         minPrice = 0;
         maxPrice = 30;
-    } else if (price === '2') {
+    } else if (Number(price) === 2) {
         minPrice = 31;
         maxPrice = 80;
     } else {
@@ -85,7 +85,7 @@ const handleAirtableCall = async (req) => {
         maxPrice = 500;
     }
 
-    let airtableData = await getLocationInformation(location);
+    let airtableData = await getLocationInformation(location, people);
 
     let outString = '';
 
@@ -98,25 +98,29 @@ const handleAirtableCall = async (req) => {
             let fields = record.fields;
             let recordPrice = 0;
             // Check the guest is greater than required
-            if (Number(fields.guest) == Number(people)) {
+            if (Number(fields.guest) === Number(people)) {
                 try {
                     recordPrice = Number(fields.price.split('$')[1]);
                 } catch (error) {
 
                 }
                 // Check the price range
-                if (recordPrice >= minPrice && recordPrice <= maxPrice) {
+                if (Number(recordPrice) >= Number(minPrice) && Number(recordPrice) <= Number(maxPrice)) {
                     // This is where you format the string
                     if (fields.rating_n_reviews === 'empty') {
-                        outString += `--> ${fields.name}, \n ${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet, \n https://airbnb.com${fields.url}.`;
+                        outString += `--> ${fields.name}, \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet, \n\nhttp://airbnb.com${fields.url}.`;
                         outString += '\n';
                     } else {
-                        outString += `--> ${fields.name}, ${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews}, \n https://airbnb.com${fields.url}.`;
+                        outString += `--> ${fields.name}, \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews} \n\nhttp://airbnb.com${fields.url}.`;
                         outString += '\n';
                     }
                 }
             }
         }
+    }
+
+    if (outString === '') {
+        outString += `We are sorry, we don't have any property at ${location} for ${people} person between ${minPrice}$ and ${maxPrice}$.`;
     }
 
     return {
