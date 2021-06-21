@@ -47,7 +47,7 @@ const getLocationInformation = async (location, guest) => {
         }
 
     } catch (error) {
-        console.log(`Error at  getLocationInformation --> ${error}`);
+        console.log(`Error at getLocationInformation --> ${error}`);
         return {
             status: 0
         }
@@ -93,7 +93,7 @@ const handleAirtableCall = async (req) => {
         outString += `I am sorry, we don't have any property at the ${location}.`;
     } else {
         let records = airtableData.records;
-        for (let index = 0; index < records.length; index++) {
+        for (let index = 0; index < 10; index++) {
             const record = records[index];
             let fields = record.fields;
             let recordPrice = 0;
