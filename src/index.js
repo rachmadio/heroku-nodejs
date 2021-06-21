@@ -93,7 +93,7 @@ const handleAirtableCall = async (req) => {
         outString += `I am sorry, we don't have any property at the ${location}.`;
     } else {
         let records = airtableData.records;
-        for (let index = 0; index < 10; index++) {
+        for (let index = 0; index < record.length; index++) {
             const record = records[index];
             let fields = record.fields;
             let recordPrice = 0;
@@ -108,10 +108,10 @@ const handleAirtableCall = async (req) => {
                 if (Number(recordPrice) >= Number(minPrice) && Number(recordPrice) <= Number(maxPrice)) {
                     // This is where you format the string
                     if (fields.rating_n_reviews === 'empty') {
-                        outString += `--> ${fields.name} \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet, \n\nhttp://airbnb.com${fields.url}.`;
+                        outString += `--> ${fields.name} \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet. \n\nHarge permalamnnya: ${fields.price} \n\n berikut link pemesanannya: http://airbnb.com${fields.url} \n`;
                         outString += '\n';
                     } else {
-                        outString += `--> ${fields.name} \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews} \n\nhttp://airbnb.com${fields.url}.`;
+                        outString += `--> ${fields.name} \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews} \n\nHarga permalamnya: ${fields.price} \n\nberikut link pemesanannya: http://airbnb.com${fields.url}\n`;
                         outString += '\n';
                     }
                 }
@@ -120,7 +120,7 @@ const handleAirtableCall = async (req) => {
     }
 
     if (outString === '') {
-        outString += `We are sorry, we don't have any property at ${location} for ${people} person between ${minPrice}$ and ${maxPrice}$.`;
+        outString += `Mohon maaf, kami tidak memiliki penginapan di ${location} untuk ${people} orang di range harga ${minPrice}$ sampai dengan ${maxPrice}$.`;
     }
 
     return {
