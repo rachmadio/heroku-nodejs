@@ -74,10 +74,10 @@ const handleAirtableCall = async (req) => {
 
     let minPrice, maxPrice;
 
-    if (Number(price) === A) {
+    if (Number(price) === 1) {
         minPrice = 0;
         maxPrice = 30;
-    } else if (Number(price) === B) {
+    } else if (Number(price) === 2) {
         minPrice = 31;
         maxPrice = 80;
     } else {
