@@ -47,7 +47,7 @@ const getLocationInformation = async (location, guest) => {
         }
 
     } catch (error) {
-        console.log(`Error at getLocationInformation --> ${error}`);
+        console.log(`Error at  getLocationInformation --> ${error}`);
         return {
             status: 0
         }
@@ -93,7 +93,7 @@ const handleAirtableCall = async (req) => {
         outString += `I am sorry, we don't have any property at the ${location}.`;
     } else {
         let records = airtableData.records;
-        for (let index = 0; index < record.length; index++) {
+        for (let index = 0; index < records.length; index++) {
             const record = records[index];
             let fields = record.fields;
             let recordPrice = 0;
@@ -108,10 +108,10 @@ const handleAirtableCall = async (req) => {
                 if (Number(recordPrice) >= Number(minPrice) && Number(recordPrice) <= Number(maxPrice)) {
                     // This is where you format the string
                     if (fields.rating_n_reviews === 'empty') {
-                        outString += `--> ${fields.name} \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet. \n\nHarge permalamnnya: ${fields.price} \n\n berikut link pemesanannya: http://airbnb.com${fields.url} \n`;
+                        outString += `--> ${fields.name} \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet, \n\nHarga permalamnya: ${fields.price} http://airbnb.com${fields.url}`;
                         outString += '\n';
                     } else {
-                        outString += `--> ${fields.name} \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews} \n\nHarga permalamnya: ${fields.price} \n\nberikut link pemesanannya: http://airbnb.com${fields.url}\n`;
+                        outString += `--> ${fields.name}, \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews} \n\nHarga permalamnya: ${fields.price} http://airbnb.com${fields.url}`;
                         outString += '\n';
                     }
                 }
@@ -120,11 +120,22 @@ const handleAirtableCall = async (req) => {
     }
 
     if (outString === '') {
-        outString += `Mohon maaf, kami tidak memiliki penginapan di ${location} untuk ${people} orang di range harga ${minPrice}$ sampai dengan ${maxPrice}$.`;
-    }
-
-    return {
-        fulfillmentText: outString
+        outString += `We are sorry, we don't have any property at ${location} for ${people} person between ${minPrice}$ and ${maxPrice}$.\nIs there any price preference do you want? Please choose an option.\n(1) 0$ to 30$\n(2) 31$ to 80$\n(3) 81$ and above.`;
+        let session = req.body.session;
+        let awaitPrice = `${session}/contexts/await-price`
+        return {
+            fulfillmentText: outString,
+            outputContexts: [
+                {
+                    name: awaitPrice,
+                    lifespanCount: 1,
+                }
+            ]
+        }
+    } else {
+        return {
+            fulfillmentText: outString
+        };
     }
 };
 
