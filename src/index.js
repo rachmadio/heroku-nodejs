@@ -114,12 +114,8 @@ const handleAirtableCall = async (req) => {
                         outString += `--> ${fields.name}, \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews} \n\nHarga permalamnya: ${fields.price}\n\nBerikiut liink pemesanannya: http://airbnb.com${fields.url}`;
                         outString += '\n';
                     }
-                    // Increment the counter if we find a property
-                    counter += 1;
+                    
                 }
-            }
-            if (counter == 5) {
-                break;
             }
         }
     }
