@@ -108,13 +108,18 @@ const handleAirtableCall = async (req) => {
                 if (Number(recordPrice) >= Number(minPrice) && Number(recordPrice) <= Number(maxPrice)) {
                     // This is where you format the string
                     if (fields.rating_n_reviews === 'empty') {
-                        outString += `--> ${fields.name} \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet, \n\nHarga permalamnya: ${fields.price} http://airbnb.com${fields.url}`;
+                        outString += `--> ${fields.name} \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet, \n\nHarga permalamnya: ${fields.price}\n\nBerikiut liink pemesanannya: http://airbnb.com${fields.url}`;
                         outString += '\n';
                     } else {
-                        outString += `--> ${fields.name}, \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews} \n\nHarga permalamnya: ${fields.price} http://airbnb.com${fields.url}`;
+                        outString += `--> ${fields.name}, \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews} \n\nHarga permalamnya: ${fields.price}\n\nBerikiut liink pemesanannya: http://airbnb.com${fields.url}`;
                         outString += '\n';
                     }
+                    // Increment the counter if we find a property
+                    counter += 1;
                 }
+            }
+            if (counter == 5) {
+                break;
             }
         }
     }
