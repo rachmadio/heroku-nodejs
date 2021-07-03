@@ -114,18 +114,10 @@ const handleAirtableCall = async (req) => {
                         outString += `--> ${fields.name}, \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews}. \n\nHarga permalamnya: ${fields.price}\n\nBerkiut link pemesanannya: http://airbnb.com${fields.url}\n`;
                         outString += '\n';
                     }
-                    // Increment the counter if we find a property
-                    counter += 1;
                 }
             }
-            // Check for the counter values
-            // this will stop once we get 5 properties
-            if (counter == 5) {
-            break;
         }
     }
-}
-
 // Fallback Answer if there is no listings at price range
     if (outString === '') {
         outString += `Mohon maaf, kami tidak memiliki penginapan di ${location} untuk ${people} orrang di range harga ${minPrice}$ sampai dengan ${maxPrice}$.\nApakah ada preferensi harga lain yang kamu inginkan? Mohon tulis ulang opsi harga mana yang anda iginkan.\n(1) 0$ sampai dengan 30$\n(2) 31$ sampai dengan 80$\n(3) 81$ sampai deengan tak terrhingga.`;
