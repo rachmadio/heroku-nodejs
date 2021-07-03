@@ -108,10 +108,10 @@ const handleAirtableCall = async (req) => {
                 if (Number(recordPrice) >= Number(minPrice) && Number(recordPrice) <= Number(maxPrice)) {
                     // This is where you format the string
                     if (fields.rating_n_reviews === 'empty') {
-                        outString += `━>  ${fields.name}. \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}. Not rated yet. \n\nHarga permalamnya: ${fields.price}/malam\n\nBerikut link pemesanannya: http://airbnb.com${fields.url}\n`;
+                        outString += `→  ${fields.name}. \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}. Not rated yet. \n\nHarga permalamnya: ${fields.price}/malam\n\nBerikut link pemesanannya: http://airbnb.com${fields.url}\n`;
                         outString += '\n';
                     } else {
-                        outString += `━> ${fields.name}. \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}. ★${fields.rating_n_reviews}. \n\nHarga permalamnya: ${fields.price}/malam\n\nBerikut link pemesanannya: http://airbnb.com${fields.url}\n`;
+                        outString += `→ ${fields.name}. \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}. ★${fields.rating_n_reviews}. \n\nHarga permalamnya: ${fields.price}/malam\n\nBerikut link pemesanannya: http://airbnb.com${fields.url}\n`;
                         outString += '\n';
                     }
                 }
