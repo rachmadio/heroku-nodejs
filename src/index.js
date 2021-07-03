@@ -90,14 +90,14 @@ const handleAirtableCall = async (req) => {
     let outString = '';
 
     if (airtableData.status === 0) {
-        outString += `I am sorry, we don't have any property at the ${location}.`;
+        outString += `Mohon maaf, kami tidak memiliki property di ${location}.`;
     } else {
         let records = airtableData.records;
         for (let index = 0; index < records.length; index++) {
             const record = records[index];
             let fields = record.fields;
             let recordPrice = 0;
-            // Check the guest is greater than required
+            // Check the guest is equal than required
             if (Number(fields.guest) === Number(people)) {
                 try {
                     recordPrice = Number(fields.price.split('$')[1]);
@@ -108,19 +108,19 @@ const handleAirtableCall = async (req) => {
                 if (Number(recordPrice) >= Number(minPrice) && Number(recordPrice) <= Number(maxPrice)) {
                     // This is where you format the string
                     if (fields.rating_n_reviews === 'empty') {
-                        outString += `--> ${fields.name} \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet, \n\nHarga permalamnya: ${fields.price}\n\nBerikiut liink pemesanannya: http://airbnb.com${fields.url}`;
+                        outString += `--> ${fields.name} \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, Not rated yet. \n\nHarga permalamnya: ${fields.price}\n\nBerkiut link pemesanannya: http://airbnb.com${fields.url}\n\n`;
                         outString += '\n';
                     } else {
-                        outString += `--> ${fields.name}, \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews} \n\nHarga permalamnya: ${fields.price}\n\nBerikiut liink pemesanannya: http://airbnb.com${fields.url}`;
+                        outString += `--> ${fields.name}, \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}, ${fields.rating_n_reviews}. \n\nHarga permalamnya: ${fields.price}\n\nBerkiut link pemesanannya: http://airbnb.com${fields.url}\n\n`;
                         outString += '\n';
                     }
                 }
             }
         }
     }
-
+// Fallback Answer if there is no listings at price range
     if (outString === '') {
-        outString += `We are sorry, we don't have any property at ${location} for ${people} person between ${minPrice}$ and ${maxPrice}$.\nIs there any price preference do you want? Please choose an option.\n(1) 0$ to 30$\n(2) 31$ to 80$\n(3) 81$ and above.`;
+        outString += `Mohon maaf, kami tidak memiliki penginapan di ${location} untuk ${people} orrang di range harga ${minPrice}$ sampai dengan ${maxPrice}$.\nApakah ada preferensi harga lain yang kamu inginkan? Mohon tulis ulang opsi harga mana yang anda iginkan.\n(1) 0$ sampai dengan 30$\n(2) 31$ sampai dengan 80$\n(3) 81$ sampai deengan tak terrhingga.`;
         let session = req.body.session;
         let awaitPrice = `${session}/contexts/await-price`
         return {
