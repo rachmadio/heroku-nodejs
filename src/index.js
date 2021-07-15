@@ -26,7 +26,7 @@ const APP_ID = process.env.APP_ID;
 // Get the user by sender_id
 const getLocationInformation = async (location, guest) => {
 
-    url = `https://api.airtable.com/v0/${APP_ID}/ListingsAirbnbSheet?view=Grid%20view&filterByFormula=(AND({Location}="${location}", {guest}="${guest}"))&maxRecords=100`;
+    url = `htts://api.airtable.com/v0/${APP_ID}/ListingsAirbnbSheet?view=Grid%20view&filterByFormula=(AND({Location}="${location}", {guest}="${guest}"))&maxRecords=100`;
     headers = {
         Authorization: 'Bearer ' + API_KEY
     }
@@ -90,8 +90,8 @@ const handleAirtableCall = async (req) => {
     let outString = '';
 
     if (airtableData.status === 0) {
-        outString += `Mohon maaf, kami tidak memiliki property di ${location}.`;
-    } else {
+        outString += `Mohon maaf, kami tidak dapat mencaikan kampu penginapaan dilokaasi tersebut.`;
+    } else { //pengambilan data di airtable
         let records = airtableData.records;
         for (let index = 0; index < records.length; index++) {
             const record = records[index];
@@ -108,10 +108,10 @@ const handleAirtableCall = async (req) => {
                 if (Number(recordPrice) >= Number(minPrice) && Number(recordPrice) <= Number(maxPrice)) {
                     // This is where you format the string
                     if (fields.rating_n_reviews === 'empty') {
-                        outString += `→  ${fields.name}. \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}. Not rated yet. \n\nHarga permalamnya: ${fields.price}/malam\n\nBerikut link pemesanannya: http://airbnb.com${fields.url}\n`;
+                        outString += `→  ${fields.name}.\n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}. Not rated yet. \n\nHarga: ${fields.price}/malam\n\nBerikut link pemesanannya: http://airbnb.com${fields.url}\n`;
                         outString += '\n';
                     } else {
-                        outString += `→ ${fields.name}. \n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}. ★${fields.rating_n_reviews}. \n\nHarga permalamnya: ${fields.price}/malam\n\nBerikut link pemesanannya: http://airbnb.com${fields.url}\n`;
+                        outString += `→ ${fields.name}.\n\n${fields.type}, ${fields.beds}, ${fields.bathrooms}, ${fields.facilities}. ★${fields.rating_n_reviews}. \n\nHarga: ${fields.price}/malam\n\nBerikut link pemesanannya: http://airbnb.com${fields.url}\n`;
                         outString += '\n';
                     }
                 }
@@ -120,7 +120,7 @@ const handleAirtableCall = async (req) => {
     }
 // Fallback Answer if there is no listings at price range
     if (outString === '') {
-        outString += `Mohon maaf, kami tidak memiliki penginapan di ${location} untuk ${people} orrang di range harga ${minPrice}$ sampai dengan ${maxPrice}$.\nApakah ada preferensi harga lain yang kamu inginkan? Mohon tulis ulang opsi harga mana yang anda iginkan.\n(1) 0$ sampai dengan 30$\n(2) 31$ sampai dengan 80$\n(3) 81$ sampai deengan tak terrhingga.`;
+        outString += `Mohon maaf, kami tidak memiliki penginapan di ${location} untuk ${people} orrang di range harga ${minPrice}$ sampai dengan ${maxPrice}$.\nApakah ada preferensi harga lain yang kamu inginkan? Mohon tulis ulang opsi harga mana yang anda iginkan.\n(1) 0$ sampai dengan 30$\n(2) 31$ sampai dengan 80$\n(3) 81$ sampai dengan tak terrhingga.`;
         let session = req.body.session;
         let awaitPrice = `${session}/contexts/await-price`
         return {
