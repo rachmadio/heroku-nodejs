@@ -90,7 +90,7 @@ const handleAirtableCall = async (req) => {
     let outString = '';
 
     if (airtableData.status === 0) {
-        outString += `Mohon maaf, kami tidak dapat mencarikan kamu penginapan dilokaasi tersebut.`;
+        outString += `Mohon maaf, kami tidak dapat mencarikan kamu penginapan dilokasi tersebut. Karena kita tidak memiliki data untuk kota tujuan tersebut.`;
     } else { //pengambilan data di airtable
         let records = airtableData.records;
         for (let index = 0; index < records.length; index++) {
